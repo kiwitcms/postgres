@@ -32,4 +32,4 @@ jobs:
         run: |
           docker build -t kiwitcms/postgres:${{ matrix.version }} .
 
-          docker images --digests
+          docker images
