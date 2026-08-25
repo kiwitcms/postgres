@@ -37,6 +37,6 @@ jobs:
           docker images
 
           echo "${{ secrets.DOCKER_PUSH_TOKEN }}" | docker login -u="${{ secrets.DOCKER_PUSH_USERNAME }}" --password-stdin
-          docker push kiwitcms/postgres:${{ matrix.version }}
           docker push kiwitcms/postgres:${{ matrix.version }}-$TIMESTAMP
+          docker push kiwitcms/postgres:${{ matrix.version }}
           docker logout
