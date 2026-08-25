@@ -1,0 +1,42 @@
+name: docker-push
+
+on:
+  push:
+    branches: main
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  docker:
+    runs-on: ubuntu-26.04
+    strategy:
+      matrix:
+        version: [17, 18]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Docker version info
+        run: |
+          docker --version
+
+          docker compose --version
+
+      - name: Build & push kiwitcms/postgres:${{ matrix.version }}
+        working-directory: ${{ matrix.version }}
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+
+          docker build -t kiwitcms/postgres:${{ matrix.version }} .
+          docker tag kiwitcms/postgres:${{ matrix.version }} kiwitcms/postgres:${{ matrix.version }}-$TIMESTAMP
+
+          docker images
+
+          echo "${{ secrets.DOCKER_PUSH_TOKEN }}" | docker login -u="${{ secrets.DOCKER_PUSH_USERNAME }}" --password-stdin
+          docker push kiwitcms/postgres:${{ matrix.version }}
+          docker push kiwitcms/postgres:${{ matrix.version }}-$TIMESTAMP
+          docker logout
