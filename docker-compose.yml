@@ -1,0 +1,52 @@
+services:
+    postgres_17:
+        container_name: postgres_17
+        build:
+          context: .
+          dockerfile: ./17/Dockerfile
+        restart: always
+        volumes:
+            - db17_data:/var/lib/postgresql
+        environment:
+            POSTGRES_DB: kiwitcms
+            POSTGRES_USER: kiwitcms
+            POSTGRES_PASSWORD: kiwitcms
+
+    postgres_18:
+        container_name: postgres_18
+        build:
+          context: .
+          dockerfile: ./18/Dockerfile
+        restart: always
+        volumes:
+            - db18_data:/var/lib/postgresql
+        environment:
+            POSTGRES_DB: kiwitcms
+            POSTGRES_USER: kiwitcms
+            POSTGRES_PASSWORD: kiwitcms
+
+    web:
+        container_name: web
+        image: pub.kiwitcms.eu/kiwitcms/kiwi:latest
+        depends_on:
+            - postgres_17
+            - postgres_18
+        restart: always
+        ports:
+            - 80:8080
+            - 443:8443
+        volumes:
+            - ./testing/test_settings.py:/venv/lib64/python3.12/site-packages/tcms_settings_dir/test_settings.py:z,ro
+        environment:
+            KIWI_DB_ENGINE: django.db.backends.postgresql
+            KIWI_DB_HOST: postgres_17
+            KIWI_DB_PORT: 5432
+            KIWI_DB_NAME: kiwitcms
+            KIWI_DB_USER: kiwitcms
+            KIWI_DB_PASSWORD: kiwitcms
+            KIWI_DB_SSL_MODE: require
+
+
+volumes:
+    db17_data:
+    db18_data:
