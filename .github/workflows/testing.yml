@@ -33,3 +33,23 @@ jobs:
           docker build -t kiwitcms/postgres:${{ matrix.version }} .
 
           docker images
+
+  test:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install packages used during container testing
+        run: |
+          # used in test scripts
+          sudo apt-get install git make sscg
+
+          # install beakerlib from source it doesn't ship DEB packages
+          if [ ! -f "/usr/share/beakerlib/beakerlib.sh" ]; then
+              git clone https://github.com/beakerlib/beakerlib.git
+              sudo make -C beakerlib/ install
+          fi
+
+      - name: Run tests
+        run: |
+          ./testing/runner.sh
