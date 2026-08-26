@@ -18,7 +18,7 @@ rlJournalStart
         sleep 5
     rlPhaseEnd
 
-    rlPhaseStartTest "Sanity test - initial configuration"
+    rlPhaseStartTest "Sanity test - DB allows SSL connections - Kiwi TCMS initial_setup"
         # need to monkey-patch createsuperuser.py b/c it rejects input when not using a TTY
         rlRun -t -c 'docker exec -i web sed -i "s/raise NotRunningInTTYException/pass/" /venv/lib64/python3.12/site-packages/django/contrib/auth/management/commands/createsuperuser.py'
         rlRun -t -c 'docker exec -i web sed -i "s/getpass.getpass/input/" /venv/lib64/python3.12/site-packages/django/contrib/auth/management/commands/createsuperuser.py'
@@ -35,11 +35,6 @@ rlJournalStart
 
         rlAssertGrep "django.db.utils.OperationalError: connection failed:" "$rlRun_LOG"
         rlAssertGrep "pg_hba.conf rejects connection .* no encryption" "$rlRun_LOG"
-    rlPhaseEnd
-
-    rlPhaseStartTest "Sanity test - allows SSL connections"
-        rlRun -t -s "docker exec -i web /Kiwi/manage.py showmigrations --database postgres_17"
-        rlRun -t -s "docker exec -i web /Kiwi/manage.py showmigrations --database postgres_18"
     rlPhaseEnd
 
     rlPhaseStartTest "Container restart"
