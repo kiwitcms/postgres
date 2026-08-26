@@ -2,8 +2,8 @@ services:
     postgres_17:
         container_name: postgres_17
         build:
-          context: .
-          dockerfile: ./17/Dockerfile
+          context: 17/
+          dockerfile: Dockerfile
         restart: always
         volumes:
             - db17_data:/var/lib/postgresql
@@ -11,19 +11,68 @@ services:
             POSTGRES_DB: kiwitcms
             POSTGRES_USER: kiwitcms
             POSTGRES_PASSWORD: kiwitcms
+            POSTGRES_SSL_CERT: |-
+                -----BEGIN CERTIFICATE-----
+                MIIDyDCCArCgAwIBAgIIB0Yovk/q2RswDQYJKoZIhvcNAQELBQAwZTELMAkGA1UE
+                BhMCQkcxDjAMBgNVBAcMBVNvZmlhMRIwEAYDVQQKDAlLaXdpIFRDTVMxHzAdBgNV
+                BAsMFmNhLTM5NzYyODA1NjE1MDg4MTU3OTgxETAPBgNVBAMMCGRhdGFiYXNlMB4X
+                DTI2MDgyNjE0MzIwMVoXDTI3MDkyODE0MzIwMVowYjELMAkGA1UEBhMCQkcxDjAM
+                BgNVBAcMBVNvZmlhMRIwEAYDVQQKDAlLaXdpIFRDTVMxHDAaBgNVBAsME1F1YWxp
+                dHkgRW5naW5lZXJpbmcxETAPBgNVBAMMCGRhdGFiYXNlMIIBIjANBgkqhkiG9w0B
+                AQEFAAOCAQ8AMIIBCgKCAQEAnS44wxnA/lYCpQEI9ZzYuDBQXls0h0WTs0fGZJJM
+                BxaMO0+nAIuYaJ3IiW6/6dbHObuxam4icTzCQb0d4rw4DJUyWWT3YzETJ6JkKmuk
+                MuJxOrOY1Zya5kMYtFcuaMxt3v/uGV5ABYIDWtC1QihxgQU/UKNAm4wsLqCHmOcP
+                PqZ8bDKuW2ob1QLAVYCcOkBM70v5L+zB8ygjvLr+ihl1Iayp3OWTlppreg8VQ9K+
+                bv18L1O/a0d9f4o2S0YU0qylPtJwIrujRcFyocsFuIP5ZIqIupmpk61YCTuI8Ota
+                xoz3u4+WgB3DYmrasihRmFXPe+A9Vm8bL5kQK+pzjU/JDQIDAQABo38wfTAOBgNV
+                HQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwCQYDVR0TBAIwADAqBgNV
+                HREEIzAhgghkYXRhYmFzZYIVZGF0YWJhc2UuZXhhbXBsZS5raXdpMB8GA1UdIwQY
+                MBaAFM8yzwSSNg1mJXUk9+3Om1/SNIYFMA0GCSqGSIb3DQEBCwUAA4IBAQB1wGmo
+                kbN4esvvtl15U3c/gtwdCdERxNgTlh1UkY9NIrlsdG2CnafciMwAw9Y+W4Pv2gIm
+                C4lcV709rVlTvMbnHRv8CacOnIxzJvjitMJbZLuG0/mtAFvuUX4h+pFI57ZSZl4K
+                HA2jQtifTAiNri/qbeLlp7E2lzeSbty+/lWdbNr42QkpNAqcMVKNXQRG3r+vrjU+
+                +TBqhhcRdXN9m+uCiASvMrp7M0FiAoztnEl/2WrfPby2lN/Vwre2jKwFNa57Z1uI
+                rjH5iA54wqeKU3PmvfjFkvNZ2QNmSRIupSzRUi96Xid6qrn2UsRF/AsT/kDGCcbw
+                wYR0HWwTLAEw6ynz
+                -----END CERTIFICATE-----
+            POSTGRES_SSL_KEY: |-
+                -----BEGIN PRIVATE KEY-----
+                MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCdLjjDGcD+VgKl
+                AQj1nNi4MFBeWzSHRZOzR8ZkkkwHFow7T6cAi5honciJbr/p1sc5u7FqbiJxPMJB
+                vR3ivDgMlTJZZPdjMRMnomQqa6Qy4nE6s5jVnJrmQxi0Vy5ozG3e/+4ZXkAFggNa
+                0LVCKHGBBT9Qo0CbjCwuoIeY5w8+pnxsMq5bahvVAsBVgJw6QEzvS/kv7MHzKCO8
+                uv6KGXUhrKnc5ZOWmmt6DxVD0r5u/XwvU79rR31/ijZLRhTSrKU+0nAiu6NFwXKh
+                ywW4g/lkioi6mamTrVgJO4jw61rGjPe7j5aAHcNiatqyKFGYVc974D1WbxsvmRAr
+                6nONT8kNAgMBAAECggEASv05YYOQ+wbH/jcPMjchgkayoUG8Puln/Tm6IlNV6G/O
+                eaGX2H/BN/BHM6Jd909b/2RX0aI31nSZbUmvz3Pi/cXUnqe4C1/ndppYVZDDZu93
+                +/yhZxBvKnpKeAe8AY2+wYyy6PF5c+dCeHpob+bhuB9rxKoOceefUKOP7dgXAtkl
+                ZzRGeM1j7GmZjGlTwt4sqJa/mYdh+vpMjyFPKovepFBcgOsh0FKM3CJ7+2Hzm0M5
+                1vPFn3dZ4lqpwO5VSaZGErFiG8lNVlD+Yg36xNFHrOnjb/bvBZhgvTHXKX1mDmQp
+                wNXf3Y1U0B2PEZDXpbO3sFrcKWezXtezl+ySYVM0tQKBgQDV+wUBQFXnt5OpjVRR
+                +csFao2ctoZ7wAeOzzCHctKG+9FsIo36DSjYbRj+f3NQnLGQfgURPBXgtIxLNZFg
+                mWjG91UBOdLe8mJIw1TKEvQh8UGBygbjP6qi7qhreiWocsb3I3LgH3Nd475dvthk
+                vSyStZaKMNu1JnFJo+dRwkuBywKBgQC8C9G5ef11+BHj9jRULGpgn5yeahjdb+aw
+                /92dkL0wjCCEd0wffVbn9UOCaOsd5q0+xSpSr8NW+NI+u2m0TCph+ejD8btoKV3u
+                AFKT4rTBVY05+2s2bX7BE9b6jsgfsr0u4vc7dnFgGo/F2fCSQaZZHG7I/0aLPmPk
+                obx0YbQlhwKBgQCwrx6I0/ia5mgU3k+7iIhspnjb55LP59XVw5qMnPDc6F0Z7sZQ
+                rEEHw72Zlt8+tsOfTY8dlgFyk2IsT8UEgGeVsnAMHRTTZkxlTHRcjp3q0OyIIKrj
+                RZS+CFYkuK0TlAJZ2nlmOlHmOsDbY1QGinWdhjcRUBp6T43HgoDkb4wtVQKBgCU2
+                TY1ft6mlqpyq9xYFKBPw4gRzSHJhl4xFRezNXLMDt9ee6AB/RDhoz7A55PUo1fXK
+                /KIaSBSo7qodWkCkpep3kvlbl9N4BC95/t1nCpALxwPHXiMKLgA1VeCFatLjAw8J
+                ORWaTbtP5k2n4DSBK1MNDltWMPaTJR90Zh+9yfF3AoGAbm5ad+1VlrzeGLeRJJlw
+                e973HTPwcbKYJUvdQXVKw7Xv1ax39hHDdT0ClSG4RT2CMbQokJ8H7s6Xu4j1QPjs
+                lndQ0AFTkC/60tVceBZv6i3Mw0ZjfcMhwChnBjVHIJuV7iNGFYLgCGeMSPSDaWV5
+                5TscwBqnHlbks8ZSsk2u0zQ=
+                -----END PRIVATE KEY-----
 
     postgres_18:
+        extends: postgres_17
         container_name: postgres_18
-        build:
-          context: .
-          dockerfile: ./18/Dockerfile
-        restart: always
+        build: !override
+          context: 18/
+          dockerfile: Dockerfile
         volumes:
             - db18_data:/var/lib/postgresql
-        environment:
-            POSTGRES_DB: kiwitcms
-            POSTGRES_USER: kiwitcms
-            POSTGRES_PASSWORD: kiwitcms
 
     web:
         container_name: web
