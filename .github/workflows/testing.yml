@@ -30,7 +30,7 @@ jobs:
       - name: Build kiwitcms/postgres:${{ matrix.version }}
         working-directory: ${{ matrix.version }}
         run: |
-          docker build -t kiwitcms/postgres:${{ matrix.version }} .
+          docker build --sbom=true --provenance=mode=max -t kiwitcms/postgres:${{ matrix.version }} .
 
           docker images
 

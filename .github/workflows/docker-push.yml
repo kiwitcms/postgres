@@ -31,7 +31,7 @@ jobs:
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
 
-          docker build -t kiwitcms/postgres:${{ matrix.version }} .
+          docker build --sbom=true --provenance=mode=max -t kiwitcms/postgres:${{ matrix.version }} .
           docker tag kiwitcms/postgres:${{ matrix.version }} kiwitcms/postgres:${{ matrix.version }}-$TIMESTAMP
 
           docker images
