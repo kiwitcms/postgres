@@ -31,4 +31,4 @@ if [ ! -s "$PGDATA/PG_VERSION" ] && [ -n "$POSTGRES_REPLICATION_USER" ]; then
 fi
 
 echo "INFO: starting postgres"
-docker-entrypoint.sh "$@"
+exec docker-entrypoint.sh "$@"
