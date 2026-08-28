@@ -16,13 +16,24 @@ set -eu
 # WARNING: chown postgres:postgres
 # WARNING: chmod 0600
 echo "    **** Configure SSL certificate and key"
-echo "$POSTGRES_SSL_CERT" > "$PGDATA/server.crt"
+echo -e "$POSTGRES_SSL_CERT" > "$PGDATA/server.crt"
 chown postgres:postgres "$PGDATA/server.crt"
 chmod 0600  "$PGDATA/server.crt"
 
-echo "$POSTGRES_SSL_KEY" > "$PGDATA/server.key"
+echo "DEBUG: BEGIN $PGDATA/server.crt"
+ls -l "$PGDATA/server.crt"
+cat "$PGDATA/server.crt"
+echo "DEBUG: END $PGDATA/server.crt"
+
+
+echo -e "$POSTGRES_SSL_KEY" > "$PGDATA/server.key"
 chown postgres:postgres "$PGDATA/server.key"
 chmod 0600  "$PGDATA/server.key"
+
+echo "DEBUG: BEGIN $PGDATA/server.key"
+ls -l "$PGDATA/server.key"
+echo "DEBUG: END $PGDATA/server.key"
+
 
 echo "    **** Turn SSL mode ON"
 psql --set ON_ERROR_STOP=1 \
