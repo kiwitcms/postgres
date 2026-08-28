@@ -7,6 +7,7 @@ services:
         restart: always
         volumes:
             - db17_data:/var/lib/postgresql
+            - ./initdb.d/01_replication_users.sh:/docker-entrypoint-initdb.d/01_replication_users.sh:Z
         environment:
             POSTGRES_DB: kiwitcms
             POSTGRES_USER: kiwitcms
@@ -73,6 +74,7 @@ services:
           dockerfile: Dockerfile
         volumes:
             - db18_data:/var/lib/postgresql
+            - ./initdb.d/01_replication_users.sh:/docker-entrypoint-initdb.d/01_replication_users.sh:Z
 
     web:
         container_name: web
@@ -99,3 +101,8 @@ services:
 volumes:
     db17_data:
     db18_data:
+
+
+networks:
+  default:
+    name: postgres_default

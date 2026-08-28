@@ -37,6 +37,16 @@ rlJournalStart
         rlAssertGrep "pg_hba.conf rejects connection .* no encryption" "$rlRun_LOG"
     rlPhaseEnd
 
+    rlPhaseStartTest "Start replication containers"
+        rlRun -t -c "docker run -d --name=replica_17 --network=postgres_default -e POSTGRES_REPLICATION_USER=rpl_usr_17 -e POSTGRES_REPLICATION_PASSWORD=replicate-me -e POSTGRES_PRIMARY_HOST=postgres_17 postgres-postgres_17:latest"
+        sleep 120
+        rlRun -t -c "docker logs replica_17"
+
+        rlRun -t -c "docker run -d --name=replica_18 --network=postgres_default -e POSTGRES_REPLICATION_USER=rpl_usr_18 -e POSTGRES_REPLICATION_PASSWORD=replicate-me -e POSTGRES_PRIMARY_HOST=postgres_18 postgres-postgres_18:latest"
+        sleep 120
+        rlRun -t -c "docker logs replica_18"
+    rlPhaseEnd
+
     rlPhaseStartTest "Container restart"
         rlRun -t -c "docker compose restart"
         assert_up_and_running
@@ -56,7 +66,21 @@ rlJournalStart
         assert_up_and_running
     rlPhaseEnd
 
+    rlPhaseStartTest "Check content in replicated databases"
+        REPLICA_17_ADDRESS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' replica_17)
+        rlRun -t -c "psql --dbname 'postgres://kiwitcms:kiwitcms@$REPLICA_17_ADDRESS/kiwitcms?sslmode=require' -c 'SELECT * FROM management_priority;' | grep '5 rows'"
+
+        REPLICA_18_ADDRESS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' replica_18)
+        rlRun -t -c "psql --dbname 'postgres://kiwitcms:kiwitcms@$REPLICA_18_ADDRESS/kiwitcms?sslmode=require' -c 'SELECT * FROM management_priority;' | grep '5 rows'"
+    rlPhaseEnd
+
     rlPhaseStartCleanup
+        rlRun -t -c "docker kill replica_17"
+        rlRun -t -c "docker rm replica_17"
+
+        rlRun -t -c "docker kill replica_18"
+        rlRun -t -c "docker rm replica_18"
+
         rlRun -t -c "docker compose down"
         if [ -n "$ImageOS" ]; then
             rlRun -t -c "docker volume rm postgres_db17_data"
