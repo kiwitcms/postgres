@@ -78,7 +78,7 @@ services:
 
     web:
         container_name: web
-        image: pub.kiwitcms.eu/kiwitcms/kiwi:latest
+        image: pub.kiwitcms.eu/kiwitcms/kiwitcms:latest
         depends_on:
             - postgres_17
             - postgres_18
