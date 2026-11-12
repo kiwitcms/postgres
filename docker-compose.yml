@@ -87,7 +87,7 @@ services:
             - 80:8080
             - 443:8443
         volumes:
-            - ./testing/test_settings.py:/venv/lib64/python3.12/site-packages/tcms_settings_dir/test_settings.py:z,ro
+            - ./testing/test_settings.py:/venv/lib64/python3.14/site-packages/tcms_settings_dir/test_settings.py:z,ro
         environment:
             KIWI_DB_ENGINE: django.db.backends.postgresql
             KIWI_DB_HOST: postgres_17
