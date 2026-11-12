@@ -42,3 +42,9 @@ jobs:
           docker push kiwitcms/postgres:${{ matrix.version }}-$TIMESTAMP
           docker push kiwitcms/postgres:${{ matrix.version }}
           docker logout
+
+      - name: Remove container registry credentials
+        if: always()
+        run: |
+          docker logout || true
+          rm -f ~/.docker/config.json
